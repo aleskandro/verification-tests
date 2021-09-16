@@ -40,7 +40,7 @@ Feature: ServiceAccount and Policy Managerment
   Scenario: Could grant admin permission for the service account group to access to its own project
     Given I have a project
     When I run the :new_app client command with:
-      | docker_image | quay.io/openshifttest/hello-openshift:openshift |
+      | docker_image | quay.io/aleskandrox/hello-pod:centos-8080 |
     Then the step should succeed
     When I run the :policy_add_role_to_group client command with:
       | role       | admin                                     |

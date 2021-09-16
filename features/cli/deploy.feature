@@ -289,7 +289,7 @@ Feature: deployment related features
   Scenario: Rollback via CLI when previous version failed
     Given I have a project
     When I run the :create_deploymentconfig client command with:
-      | image | quay.io/openshifttest/hello-openshift@sha256:424e57db1f2e8e8ac9087d2f5e8faea6d73811f0b6f96301bc94293680897073 |
+      | image | quay.io/aleskandrox/hello-pod:centos-8081 |
       | name  | mydc                  |
     Then the step should succeed
     And I wait until the status of deployment "mydc" becomes :complete
@@ -372,7 +372,7 @@ Feature: deployment related features
   Scenario: A/B Deployment
     Given I have a project
     When I run the :new_app client command with:
-      | docker_image | quay.io/openshifttest/deployment-example@sha256:0631a0c7aee3554391156d991138af4b00e9a724f9c5813f4079930c8fc0d16b |
+      | docker_image | quay.io/aleskandrox/deployment-example:v1 |
       | name         | ab-example-a                                                                                                     |
       | l            | ab-example=true                                                                                                  |
       | env          | SUBTITLE=shardA                                                                                                  |
@@ -387,7 +387,7 @@ Feature: deployment related features
     Then I wait for a web server to become available via the "ab-example" route
     And the output should contain "shardA"
     When I run the :new_app client command with:
-      | docker_image | quay.io/openshifttest/deployment-example@sha256:0631a0c7aee3554391156d991138af4b00e9a724f9c5813f4079930c8fc0d16b |
+      | docker_image | quay.io/aleskandrox/deployment-example:v1 |
       | name         | ab-example-b                                                                                                     |
       | l            | ab-example=true                                                                                                  |
       | env          | SUBTITLE=shardB                                                                                                  |
@@ -432,11 +432,11 @@ Feature: deployment related features
   Scenario: Blue-Green Deployment
     Given I have a project
     When I run the :new_app client command with:
-      | docker_image | quay.io/openshifttest/deployment-example:v1 |
+      | docker_image | quay.io/aleskandrox/deployment-example:v1 |
       | name         | bluegreen-example-old                       |
     Then the step should succeed
     When I run the :new_app client command with:
-      | docker_image | quay.io/openshifttest/deployment-example:v2 |
+      | docker_image | quay.io/aleskandrox/deployment-example:v2 |
       | name         | bluegreen-example-new                       |
     Then the step should succeed
     #When I expose the "bluegreen-example-old" service
@@ -720,7 +720,7 @@ Feature: deployment related features
   Scenario: Scale up when deployment running
     Given I have a project
     When I run the :create_deploymentconfig client command with:
-      | image | quay.io/openshifttest/deployment-example@sha256:0631a0c7aee3554391156d991138af4b00e9a724f9c5813f4079930c8fc0d16b |
+      | image | quay.io/aleskandrox/deployment-example:v1 |
       | name  | deployment-example                                                                                               |
     Then the step should succeed
     And I wait until the status of deployment "deployment-example" becomes :complete
@@ -908,7 +908,7 @@ Feature: deployment related features
     Given the master version >= "4.5"
     Given I have a project
     When I run the :new_app client command with:
-      | docker_image         | quay.io/openshifttest/deployment-example |
+      | docker_image         | quay.io/aleskandrox/deployment-example |
       | name                 | ab-example-a                             |
       | as_deployment_config | true                                     |
       | l                    | ab-example=true                          |
@@ -924,7 +924,7 @@ Feature: deployment related features
     Then I wait for a web server to become available via the "ab-example" route
     And the output should contain "shardA"
     When I run the :new_app client command with:
-      | docker_image         | quay.io/openshifttest/deployment-example |
+      | docker_image         | quay.io/aleskandrox/deployment-example |
       | name                 | ab-example-b                             |
       | as_deployment_config | true                                     |
       | l                    | ab-example=true                          |

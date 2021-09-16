@@ -314,7 +314,7 @@ Given /^the#{OPT_QUOTED} node service is verified$/ do |node_name|
   #    "spec": {
   #      "containers": [{
   #        "name": "hostname-pod",
-  #        "image": "quay.io/openshifttest/hello-openshift@sha256:424e57db1f2e8e8ac9087d2f5e8faea6d73811f0b6f96301bc94293680897073",
+  #        "image": "quay.io/aleskandrox/hello-pod:centos-8081",
   #        "ports": [{
   #          "containerPort": 8080,
   #          "protocol": "TCP"
