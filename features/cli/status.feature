@@ -32,7 +32,7 @@ Feature: Check status via oc status, wait etc
     When I run the :status client command
     Then the step should succeed
     And the output should contain:
-      | pod/hello-openshift runs quay.io/openshifttest/hello-openshift |
+      | pod/hello-openshift runs quay.io/aleskandrox/openshifttest |
     # Clear out memory and cpu usage to fit into online quota limits
     And I ensure "hello-openshift" pod is deleted
 
