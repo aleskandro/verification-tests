@@ -8,7 +8,7 @@ Feature: buildlogic.feature
   Scenario: Build with specified Dockerfile via new-build -D
     Given I have a project
     When I run the :new_build client command with:
-      | D    | FROM quay.io/openshifttest/centos@sha256:285bc3161133ec01d8ca8680cd746eecbfdbc1faa6313bd863151c4b26d7e5a5\nRUN echo "hello" |
+      | D    | FROM quay.io/aleskandrox/centos:7\nRUN echo "hello" |
       | to   | myappis |
       | name | myapp   |
     Then the step should succeed
@@ -113,7 +113,7 @@ Feature: buildlogic.feature
   Scenario: Build with specified Dockerfile to image with same image name via new-build
     Given I have a project
     When I run the :new_build client command with:
-      | D  | FROM quay.io/openshifttest/centos@sha256:285bc3161133ec01d8ca8680cd746eecbfdbc1faa6313bd863151c4b26d7e5a5 |
+      | D  | FROM quay.io/aleskandrox/centos:7 |
       | to | centos |
     Then the step should succeed
     When I run the :describe client command with:
@@ -124,7 +124,7 @@ Feature: buildlogic.feature
       | Output to:\s+ImageStreamTag centos:latest  |
     Given the "centos-1" build becomes :complete
     When I run the :new_build client command with:
-      | D    | FROM quay.io/openshifttest/centos@sha256:285bc3161133ec01d8ca8680cd746eecbfdbc1faa6313bd863151c4b26d7e5a5 |
+      | D    | FROM quay.io/aleskandrox/centos:7 |
       | to   | centos:7 |
       | name | myapp    |
     And I get project bc

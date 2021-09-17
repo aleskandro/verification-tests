@@ -154,15 +154,15 @@ Feature: dockerbuild.feature
       | from_literal | password=redhat    |
     Then the step should succeed
     When I run the :new_build client command with:
-      | D | FROM quay.io/openshifttest/centos:7\nRUN yum install -y httpd\nRUN ls -l /var/run/secret/sourcesecret |
+      | D | FROM quay.io/aleskandrox/centos:7\nRUN yum install -y httpd\nRUN ls -l /var/run/secret/sourcesecret |
     Then the step should succeed
     Then the "centos" image stream was created
     And the "centos-1" build was created
     Given the "centos-1" build failed
     When I run the :patch client command with:
-      | resource      | buildconfig | 
+      | resource      | buildconfig |
       | resource_name | centos      |
-      | p             | {"spec":{"strategy":{"dockerStrategy":{"volumes":[{"mounts":[{"destinationPath":"/var/run/secret/sourcesecret"}],"name":"some-secret","source":{"secret":{"secretName":"mysecret"},"type":"Secret"}}]}}}} | 
+      | p             | {"spec":{"strategy":{"dockerStrategy":{"volumes":[{"mounts":[{"destinationPath":"/var/run/secret/sourcesecret"}],"name":"some-secret","source":{"secret":{"secretName":"mysecret"},"type":"Secret"}}]}}}} |
     Then the step should succeed
     When I run the :start_build client command with:
       | buildconfig | centos |
@@ -173,32 +173,32 @@ Feature: dockerbuild.feature
       | resource_name | bc/centos |
       | f             |           |
     Then the output should contain:
-      | RUN ls -l /var/run/secret/sourcesecret | 
-      | password -> ..data/password            | 
-      | username -> ..data/username            | 
+      | RUN ls -l /var/run/secret/sourcesecret |
+      | password -> ..data/password            |
+      | username -> ..data/username            |
 
   # @author xiuwang@redhat.com
   # @case_id OCP-42158
   @aws-ipi
   @gcp-upi
   @gcp-ipi
-  Scenario: Mount source configmap to builder container- dockerstrategy 
+  Scenario: Mount source configmap to builder container- dockerstrategy
     Given I have a project
     When I run the :create_configmap client command with:
-      | name         | myconfig  | 
+      | name         | myconfig  |
       | from_literal | key=foo   |
       | from_literal | value=bar |
     Then the step should succeed
     When I run the :new_build client command with:
-      | D | FROM quay.io/openshifttest/centos:7\nRUN yum install -y httpd\nRUN ls -l /var/run/secret/config |
+      | D | FROM quay.io/aleskandrox/centos:7\nRUN yum install -y httpd\nRUN ls -l /var/run/secret/config |
     Then the step should succeed
     Then the "centos" image stream was created
     And the "centos-1" build was created
     Given the "centos-1" build failed
     When I run the :patch client command with:
-      | resource      | buildconfig | 
+      | resource      | buildconfig |
       | resource_name | centos      |
-      | p             | {"spec":{"strategy":{"dockerStrategy":{"volumes":[{"mounts":[{"destinationPath":"/var/run/secret/config"}],"name":"my-config","source":{"configMap":{"name":"myconfig"},"type":"ConfigMap"}}]}}}} | 
+      | p             | {"spec":{"strategy":{"dockerStrategy":{"volumes":[{"mounts":[{"destinationPath":"/var/run/secret/config"}],"name":"my-config","source":{"configMap":{"name":"myconfig"},"type":"ConfigMap"}}]}}}} |
     Then the step should succeed
     When I run the :start_build client command with:
       | buildconfig | centos |
@@ -209,16 +209,16 @@ Feature: dockerbuild.feature
       | resource_name | bc/centos |
       | f             |           |
     Then the output should contain:
-      | RUN ls -l /var/run/secret/config | 
-      | key -> ..data/key                | 
-      | value -> ..data/value            | 
+      | RUN ls -l /var/run/secret/config |
+      | key -> ..data/key                |
+      | value -> ..data/value            |
 
   # @author xiuwang@redhat.com
   # @case_id OCP-42184
   @aws-ipi
   @gcp-upi
   @gcp-ipi
-  Scenario: Mount multi paths to builder container 
+  Scenario: Mount multi paths to builder container
     Given I have a project
     When I run the :create_secret client command with:
       | secret_type  | generic            |
@@ -227,15 +227,15 @@ Feature: dockerbuild.feature
       | from_literal | password=redhat    |
     Then the step should succeed
     When I run the :new_build client command with:
-      | D | FROM quay.io/openshifttest/centos:7\nRUN yum install -y httpd\nRUN ls -l /var/run/secret/secret-1\nRUN ls -l /var/run/secret/secret-2 |
+      | D | FROM quay.io/aleskandrox/centos:7\nRUN yum install -y httpd\nRUN ls -l /var/run/secret/secret-1\nRUN ls -l /var/run/secret/secret-2 |
     Then the step should succeed
     Then the "centos" image stream was created
     And the "centos-1" build was created
     Given the "centos-1" build failed
     When I run the :patch client command with:
-      | resource      | buildconfig | 
+      | resource      | buildconfig |
       | resource_name | centos      |
-      | p             | {"spec":{"strategy":{"dockerStrategy":{"volumes":[{"mounts":[{"destinationPath":"/var/run/secret/secret-1"},{"destinationPath":"/var/run/secret/secret-2"}],"name":"mysecret","source":{"secret":{"secretName":"mysecret"},"type":"Secret"}}]}}}} | 
+      | p             | {"spec":{"strategy":{"dockerStrategy":{"volumes":[{"mounts":[{"destinationPath":"/var/run/secret/secret-1"},{"destinationPath":"/var/run/secret/secret-2"}],"name":"mysecret","source":{"secret":{"secretName":"mysecret"},"type":"Secret"}}]}}}} |
     Then the step should succeed
     When I run the :start_build client command with:
       | buildconfig | centos |
@@ -246,17 +246,17 @@ Feature: dockerbuild.feature
       | resource_name | bc/centos |
       | f             |           |
     Then the output should contain:
-      | RUN ls -l /var/run/secret/secret-1 | 
-      | RUN ls -l /var/run/secret/secret-2 | 
-      | password -> ..data/password        | 
-      | username -> ..data/username        | 
+      | RUN ls -l /var/run/secret/secret-1 |
+      | RUN ls -l /var/run/secret/secret-2 |
+      | password -> ..data/password        |
+      | username -> ..data/username        |
 
   # @author xiuwang@redhat.com
   # @case_id OCP-42185
   @aws-ipi
   @gcp-upi
   @gcp-ipi
-  Scenario: Can't add relative path for mount path 
+  Scenario: Can't add relative path for mount path
     Given I have a project
     When I run the :create_secret client command with:
       | secret_type  | generic            |
@@ -265,29 +265,29 @@ Feature: dockerbuild.feature
       | from_literal | password=redhat    |
     Then the step should succeed
     When I run the :new_build client command with:
-      | D | FROM quay.io/openshifttest/centos:7\nRUN yum install -y httpd\nRUN ls -l /var/run/secret/secret-1|
+      | D | FROM quay.io/aleskandrox/centos:7\nRUN yum install -y httpd\nRUN ls -l /var/run/secret/secret-1|
     Then the step should succeed
     Then the "centos" image stream was created
     And the "centos-1" build was created
     When I run the :patch client command with:
-      | resource      | buildconfig | 
+      | resource      | buildconfig |
       | resource_name | centos      |
-      | p             | {"spec":{"strategy":{"dockerStrategy":{"volumes":[{"mounts":[{"destinationPath":"../secret/secret-1"}],"name":"mysecret","source":{"secret":{"secretName":"mysecret"},"type":"Secret"}}]}}}} | 
+      | p             | {"spec":{"strategy":{"dockerStrategy":{"volumes":[{"mounts":[{"destinationPath":"../secret/secret-1"}],"name":"mysecret","source":{"secret":{"secretName":"mysecret"},"type":"Secret"}}]}}}} |
     Then the step should fail
     Then the output should contain:
-      | must be an absolute path | 
-      | must not start with '..' | 
+      | must be an absolute path |
+      | must not start with '..' |
     When I run the :patch client command with:
-      | resource      | buildconfig | 
+      | resource      | buildconfig |
       | resource_name | centos      |
-      | p             | {"spec":{"strategy":{"dockerStrategy":{"volumes":[{"mounts":[{"destinationPath":"secret/secret-1"}],"name":"mysecret","source":{"secret":{"secretName":"mysecret"},"type":"Secret"}}]}}}} | 
+      | p             | {"spec":{"strategy":{"dockerStrategy":{"volumes":[{"mounts":[{"destinationPath":"secret/secret-1"}],"name":"mysecret","source":{"secret":{"secretName":"mysecret"},"type":"Secret"}}]}}}} |
     Then the step should fail
     Then the output should contain:
-      | Invalid value: "secret/secret-1": must be an absolute path | 
+      | Invalid value: "secret/secret-1": must be an absolute path |
 
   # @author xiuwang@redhat.com
-  # @case_id OCP-42529 
-  Scenario: Mount source name must be unique 
+  # @case_id OCP-42529
+  Scenario: Mount source name must be unique
     Given I have a project
     When I run the :create_secret client command with:
       | secret_type  | generic            |
@@ -296,19 +296,19 @@ Feature: dockerbuild.feature
       | from_literal | password=redhat    |
     Then the step should succeed
     When I run the :create_configmap client command with:
-      | name         | testsource | 
+      | name         | testsource |
       | from_literal | key=foo    |
       | from_literal | value=bar  |
     Then the step should succeed
     When I run the :new_build client command with:
-      | D | FROM quay.io/openshifttest/centos:7\nRUN yum install -y httpd\nRUN ls -l /var/run/secret |
+      | D | FROM quay.io/aleskandrox/centos:7\nRUN yum install -y httpd\nRUN ls -l /var/run/secret |
     Then the step should succeed
     Then the "centos" image stream was created
     And the "centos-1" build was created
     When I run the :patch client command with:
-      | resource      | buildconfig | 
+      | resource      | buildconfig |
       | resource_name | centos      |
-      | p             | {"spec":{"strategy":{"dockerStrategy":{"volumes":[{"mounts":[{"destinationPath":"/var/run/secret/mysecret"}],"name":"mysecret","source":{"secret":{"secretName":"testsource"},"type":"Secret"}},{"mounts":[{"destinationPath":"/var/run/secret/myconfig"}],"name":"myconfig","source":{"configMap":{"name":"testsource"},"type":"ConfigMap"}}]}}}} | 
+      | p             | {"spec":{"strategy":{"dockerStrategy":{"volumes":[{"mounts":[{"destinationPath":"/var/run/secret/mysecret"}],"name":"mysecret","source":{"secret":{"secretName":"testsource"},"type":"Secret"}},{"mounts":[{"destinationPath":"/var/run/secret/myconfig"}],"name":"myconfig","source":{"configMap":{"name":"testsource"},"type":"ConfigMap"}}]}}}} |
     Then the step should succeed
     When I run the :start_build client command with:
       | buildconfig | centos |
@@ -321,5 +321,5 @@ Feature: dockerbuild.feature
       | name     | centos-2 |
     Then the step should succeed
     Then the output should contain:
-      | spec.containers[0].volumeMounts[11].mountPath: Invalid value: "/var/run/openshift.io/volumes/testsource-user-build-volume": must be unique | 
+      | spec.containers[0].volumeMounts[11].mountPath: Invalid value: "/var/run/openshift.io/volumes/testsource-user-build-volume": must be unique |
     """
