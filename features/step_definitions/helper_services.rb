@@ -55,13 +55,21 @@ Given /^I have a nfs-provisioner (pod|service) in the(?: "([^ ]+?)")? project$/ 
     raise "Set up hostpath for nfs-provisioner failed" unless @result[:success]
   end
   if _service
-    @result = admin.cli_exec(:create, n: project.name, f: "https://raw.githubusercontent.com/openshift/external-storage/master/nfs/deploy/kubernetes/deployment.yaml")
+    step %Q|I download a file from "https://raw.githubusercontent.com/openshift/external-storage/master/nfs/deploy/kubernetes/deployment.yaml"|
+  else
+    step %Q|I download a file from "https://raw.githubusercontent.com/openshift/external-storage/master/nfs/deploy/kubernetes/pod.yaml"|
+  end
+  file_name = @result[:file_name]
+  step %Q/I replace content in "#{file_name}":/, table(%{
+    | /image: .*/ | image: quay.io/openshifttest/nfs-provisioner:multiarch |
+    })
+  @result = admin.cli_exec(:create, n: project.name, f: file_name)
+  if _service
     raise "could not create nfs-provisioner deployment" unless @result[:success]
     step %Q/a pod becomes ready with labels:/, table(%{
       | app=nfs-provisioner |
       })
   else
-    @result = admin.cli_exec(:create, n: project.name, f: "https://raw.githubusercontent.com/openshift/external-storage/master/nfs/deploy/kubernetes/pod.yaml")
     raise "could not create nfs-provisioner pod" unless @result[:success]
   end
   unless storage_class("nfs-provisioner-"+project.name).exists?(user: admin, quiet: true)
